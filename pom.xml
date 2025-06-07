@@ -167,4 +167,55 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>jdk-11-plus</id>
+            <activation>
+                <!--
+                    Automatically activates if Maven is run with JDK 11 or higher.
+                    This profile is a temporary workaround to restore JAXB support,
+                    since JAXB was removed from the JDK after Java 8.
+                -->
+                <jdk>[11,)</jdk>
+            </activation>
+            <dependencies>
+                <!--
+                    TEMPORARY SOLUTION:
+                    Adds legacy JAXB dependencies (javax.xml.bind and com.sun.xml.bind)
+                    to enable JAXB support on JDK 11 and newer.
+                    These versions are compatible with JDK 11 and work for demo/migration purposes.
+
+                    NOTE FOR ENGINEERS:
+                    For long-term support and compatibility with the latest Java (17, 21+),
+                    consider updating these dependencies to 'jakarta.xml.bind' API and runtime
+                    (see jakarta.xml.bind:jakarta.xml.bind-api and org.glassfish.jaxb:jaxb-runtime).
+                    See https://projects.eclipse.org/projects/ee4j.jaxb for details.
+                -->
+                <dependency>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-core</artifactId>
+                    <version>2.3.0.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                    <version>2.3.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.sun.xml.bind</groupId>
+                    <artifactId>jaxb-impl</artifactId>
+                    <version>2.3.1</version>
+                </dependency>
+            </dependencies>
+            <properties>
+                <!--
+                    Set Java compilation target to 11.
+                    Adjust this value according to your team's base JDK.
+                -->
+                <maven.compiler.source>11</maven.compiler.source>
+                <maven.compiler.target>11</maven.compiler.target>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>
