@@ -65,7 +65,7 @@ public class PReviewTargetMapperImpl implements PReviewTargetMapper {
                 final List<PRule> pRules;
                 if (notNullOrBlank(path)) {
                     try {
-                        logger.info("Reading PRules from file: '{}'", path);
+                        logger.info("Reading Rules from file: '{}'", path);
                         pRules = rulesFileReader.readPRules(path);
                         logger.debug("Read {} PRules from '{}'", pRules != null ? pRules.size() : 0, path);
                     } catch (Exception e) {

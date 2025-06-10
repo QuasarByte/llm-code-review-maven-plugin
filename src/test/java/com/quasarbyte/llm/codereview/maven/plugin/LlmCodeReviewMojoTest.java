@@ -12,6 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -36,25 +40,9 @@ class LlmCodeReviewMojoTest {
     }
 
     @Test
-    void testExecuteWithLmStudioMocks() {
+    void testExecuteWithLmStudioMocks() throws IOException {
         // --- MOCK: POST /v1/chat/completions ---
-        String chatCompletionResponse = "{\n" +
-                "  \"id\": \"chatcmpl-1\",\n" +
-                "  \"object\": \"chat.completion\",\n" +
-                "  \"created\": 123,\n" +
-                "  \"model\": \"qwen3-8b\",\n" +
-                "  \"choices\": [\n" +
-                "    {\n" +
-                "      \"index\": 0,\n" +
-                "      \"finish_reason\": \"stop\",\n" +
-                "      \"message\": {\n" +
-                "        \"role\": \"assistant\",\n" +
-                "        \"content\": \"{\\\"files\\\":[{\\\"comments\\\":[],\\\"fileId\\\":0,\\\"fileName\\\":\\\"ExampleOne.java\\\"}],\\\"thinkSteps\\\":[]}\"\n" +
-                "      }\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"usage\": {\"prompt_tokens\": 1, \"completion_tokens\": 1, \"total_tokens\": 2}\n" +
-                "}";
+        String chatCompletionResponse = loadTestResource("src/test/resources/com/quasarbyte/llm/codereview/maven/plugin/examples/chatCompletionResponse.json");
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
@@ -87,10 +75,13 @@ class LlmCodeReviewMojoTest {
         rule.setDescription("Find possible java.lang.ArrayIndexOutOfBoundsException");
         rule.setSeverity("critical");
 
+        // --- Add rules at the top level ---
+        reviewParameter.setRules(Collections.singletonList(rule));
+
         // --- FILE GROUP ---
         PFileGroup fileGroup = new PFileGroup();
         fileGroup.setPaths(Collections.singletonList("src/test/resources/com/quasarbyte/llm/codereview/maven/plugin/examples/ExampleOne.java"));
-        fileGroup.setRules(Collections.singletonList(rule));
+        // Don't set rules on file group since they're now at the top level
 
         // --- REVIEW TARGET ---
         PReviewTarget target = new PReviewTarget();
@@ -110,10 +101,15 @@ class LlmCodeReviewMojoTest {
         buildFailureConfiguration.setWarningThreshold(0);
         buildFailureConfiguration.setCriticalThreshold(0); // Set to 0, so the test does not fail (1 will fail if there is a critical)
 
+        // --- REPORTS CONFIGURATION ---
+        PReportsConfiguration reportsConfiguration = new PReportsConfiguration();
+        // Don't set any file paths, so no reports will be generated
+
         // --- Set parameters into Mojo ---
         mojo.setReviewParameter(reviewParameter);
         mojo.setLlmClientConfiguration(clientConfig);
         mojo.setBuildFailureConfiguration(buildFailureConfiguration);
+        mojo.setReportsConfiguration(reportsConfiguration);
 
         // --- Run the pipeline ---
         assertDoesNotThrow(mojo::execute);
@@ -134,5 +130,12 @@ class LlmCodeReviewMojoTest {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Helper method to load test resource files as strings (Java 8 compatible)
+     */
+    private String loadTestResource(String resourcePath) throws IOException {
+        return new String(Files.readAllBytes(Paths.get(resourcePath)), StandardCharsets.UTF_8);
     }
 }

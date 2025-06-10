@@ -77,6 +77,11 @@ public class PReviewParameter {
      */
     private PLlmQuota llmQuota;
 
+    /**
+     * Indicates whether reasoning should be used.
+     */
+    private Boolean useReasoning;
+
     public String getReviewName() {
         return reviewName;
     }
@@ -173,6 +178,15 @@ public class PReviewParameter {
 
     public PReviewParameter setLlmQuota(PLlmQuota llmQuota) {
         this.llmQuota = llmQuota;
+        return this;
+    }
+
+    public Boolean getUseReasoning() {
+        return useReasoning;
+    }
+
+    public PReviewParameter setUseReasoning(Boolean useReasoning) {
+        this.useReasoning = useReasoning;
         return this;
     }
 }

@@ -10,7 +10,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 /**
- * Maps a PProxy configuration to a {@link java.net.Proxy} instance.
+ * Maps a Proxy configuration to a {@link java.net.Proxy} instance.
  */
 public class PProxyMapperImpl implements PProxyMapper {
 
@@ -18,12 +18,12 @@ public class PProxyMapperImpl implements PProxyMapper {
 
     @Override
     public Proxy map(PProxy proxy) {
-        logger.info("Mapping PProxy: {}", proxy);
-
         if (proxy == null) {
-            logger.warn("Provided PProxy is null, returning null.");
+            logger.warn("Provided Proxy is null, returning null.");
             return null;
         }
+
+        logger.info("Mapping Proxy: {}", format(proxy));
 
         if (proxy.getType() == null) {
             logger.error("Proxy type cannot be null.");
@@ -59,5 +59,13 @@ public class PProxyMapperImpl implements PProxyMapper {
         InetSocketAddress address = new InetSocketAddress(host, port);
         logger.info("Proxy created: type={}, host={}, port={}", proxyType, host, port);
         return new Proxy(proxyType, address);
+    }
+
+    private static String format(PProxy proxy) {
+        return "PProxy{" +
+                "type='" + proxy + '\'' +
+                ", host='" + proxy + '\'' +
+                ", port=" + proxy +
+                '}';
     }
 }

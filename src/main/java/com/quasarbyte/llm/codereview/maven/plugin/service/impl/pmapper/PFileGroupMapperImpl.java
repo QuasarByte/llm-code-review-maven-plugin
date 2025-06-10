@@ -45,7 +45,7 @@ public class PFileGroupMapperImpl implements PFileGroupMapper {
                 final List<PRule> pRules;
                 if (notNullOrBlank(path)) {
                     try {
-                        logger.info("Reading PRules from file: '{}'", path);
+                        logger.info("Reading Rules from file: '{}'", path);
                         pRules = rulesFileReader.readPRules(path);
                         logger.debug("Read {} PRules from '{}'", pRules != null ? pRules.size() : 0, path);
                     } catch (Exception e) {
@@ -73,7 +73,8 @@ public class PFileGroupMapperImpl implements PFileGroupMapper {
 
         FileGroup result = new FileGroup();
         result.setFileGroupName(fileGroup.getFileGroupName());
-        result.setPaths(fileGroup.getPaths());
+        result.setPaths(fileGroup.getPaths() != null ? fileGroup.getPaths() : Collections.emptyList());
+        result.setExcludePaths(fileGroup.getExcludePaths() != null ? fileGroup.getExcludePaths() : Collections.emptyList());
         result.setFilesBatchSize(fileGroup.getFilesBatchSize());
         result.setRules(mapRules(allPRules));
         result.setFileGroupPrompts(fileGroup.getFileGroupPrompts());

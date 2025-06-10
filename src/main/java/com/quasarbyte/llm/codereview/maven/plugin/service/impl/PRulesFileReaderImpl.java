@@ -37,7 +37,7 @@ public class PRulesFileReaderImpl implements PRulesFileReader {
 
     @Override
     public List<PRule> readPRules(String filePath) throws Exception {
-        logger.info("Reading PRules from file: '{}'", filePath);
+        logger.info("Reading Rules from file: '{}'", filePath);
 
         if (notNullOrBlank(filePath)) {
 

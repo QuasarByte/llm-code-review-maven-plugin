@@ -7,7 +7,7 @@
     <groupId>com.quasarbyte.llm.codereview</groupId>
     <artifactId>llm-code-review-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
 
     <name>LLM Code Review Maven Plugin</name>
     <url>https://github.com/QuasarByte/llm-code-review-maven-plugin</url>
@@ -25,7 +25,7 @@
         <developer>
             <id>taluyev</id>
             <name>Roman Taluyev</name>
-            <email>taluyev@gmail.com</email>
+            <email>taluyev+llm-code-review@gmail.com</email>
             <organization>Roman Taluyev</organization>
             <url>https://www.linkedin.com/in/taluyev/</url>
         </developer>
@@ -38,8 +38,8 @@
     </scm>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>5.11.4</junit.jupiter.version>
         <mockito.version>4.11.0</mockito.version>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>com.quasarbyte.llm.codereview</groupId>
             <artifactId>sdk</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.2.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
@@ -132,6 +132,9 @@
                     <includes>
                         <include>**/*IT.java</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <test.db.type>${test.db.type}</test.db.type>
+                    </systemPropertyVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -216,6 +219,46 @@
                 <maven.compiler.target>11</maven.compiler.target>
             </properties>
         </profile>
+
+        <!-- Database profiles for testing -->
+        <profile>
+            <id>test-memory</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <test.db.type>memory</test.db.type>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>test-temp</id>
+            <properties>
+                <test.db.type>temp</test.db.type>
+            </properties>
+        </profile>
+        
+        <profile>
+            <id>test-target</id>
+            <properties>
+                <test.db.type>target</test.db.type>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test-mysql</id>
+            <properties>
+                <test.db.type>mysql</test.db.type>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>test-postgresql</id>
+            <properties>
+                <test.db.type>postgresql</test.db.type>
+            </properties>
+        </profile>
+
     </profiles>
 
 </project>

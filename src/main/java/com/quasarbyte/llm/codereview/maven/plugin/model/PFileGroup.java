@@ -17,8 +17,15 @@ public class PFileGroup {
 
     /**
      * The list of file paths or glob patterns included in this group.
+     * Each entry can be a file path or a glob pattern.
      */
     private List<String> paths;
+
+    /**
+     * The list of file paths or glob patterns to be excluded from this group.
+     * Each entry can be a file path or a glob pattern.
+     */
+    private List<String> excludePaths;
 
     /**
      * The number of files to process in a single batch within this group.
@@ -66,6 +73,15 @@ public class PFileGroup {
 
     public PFileGroup setPaths(List<String> paths) {
         this.paths = paths;
+        return this;
+    }
+
+    public List<String> getExcludePaths() {
+        return excludePaths;
+    }
+
+    public PFileGroup setExcludePaths(List<String> excludePaths) {
+        this.excludePaths = excludePaths;
         return this;
     }
 

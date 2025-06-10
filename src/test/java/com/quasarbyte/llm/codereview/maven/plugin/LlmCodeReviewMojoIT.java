@@ -40,10 +40,13 @@ class LlmCodeReviewMojoIT {
         rule.setDescription("Find possible java.lang.ArrayIndexOutOfBoundsException");
         rule.setSeverity("critical");
 
+        // --- Add rules at the top level ---
+        reviewParameter.setRules(Collections.singletonList(rule));
+
         // --- FILE GROUP ---
         PFileGroup fileGroup = new PFileGroup();
         fileGroup.setPaths(Collections.singletonList("src/test/resources/com/quasarbyte/llm/codereview/maven/plugin/examples/ExampleOne.java"));
-        fileGroup.setRules(Collections.singletonList(rule));
+        // Don't set rules on file group since they're now at the top level
 
         // --- REVIEW TARGET ---
         PReviewTarget target = new PReviewTarget();
@@ -61,10 +64,15 @@ class LlmCodeReviewMojoIT {
         buildFailureConfiguration.setWarningThreshold(0);
         buildFailureConfiguration.setCriticalThreshold(0); // Set to 0, so the test does not fail (1 will fail if there is a critical)
 
+        // --- REPORTS CONFIGURATION ---
+        PReportsConfiguration reportsConfiguration = new PReportsConfiguration();
+        // Don't set any file paths, so no reports will be generated
+
         // --- Set parameters into Mojo ---
         mojo.setReviewParameter(reviewParameter);
         mojo.setLlmClientConfiguration(clientConfig);
         mojo.setBuildFailureConfiguration(buildFailureConfiguration);
+        mojo.setReportsConfiguration(reportsConfiguration);
 
         // --- Run the pipeline ---
         assertDoesNotThrow(mojo::execute);

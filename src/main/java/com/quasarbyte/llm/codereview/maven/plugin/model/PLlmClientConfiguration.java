@@ -1,7 +1,5 @@
 package com.quasarbyte.llm.codereview.maven.plugin.model;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
-
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +43,6 @@ public class PLlmClientConfiguration {
      * The maximum number of retry attempts for failed requests.
      */
     private Integer maxRetries;
-
-    /**
-     * The {@link com.fasterxml.jackson.databind.json.JsonMapper} instance used for JSON serialization and deserialization.
-     */
-    private JsonMapper jsonMapper;
 
     /**
      * HTTP headers to be included with API requests.
@@ -130,15 +123,6 @@ public class PLlmClientConfiguration {
 
     public PLlmClientConfiguration setMaxRetries(Integer maxRetries) {
         this.maxRetries = maxRetries;
-        return this;
-    }
-
-    public JsonMapper getJsonMapper() {
-        return jsonMapper;
-    }
-
-    public PLlmClientConfiguration setJsonMapper(JsonMapper jsonMapper) {
-        this.jsonMapper = jsonMapper;
         return this;
     }
 
